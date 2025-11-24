@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import postRoutes from './routes/postRoutes.js'
 
 dotenv.config()
 
@@ -10,6 +11,7 @@ const app = express()
 // Middlewares básicos
 app.use(cors())
 app.use(express.json())
+app.use('/posts', postRoutes)
 
 // Ruta de healthcheck
 app.get('/health', (req, res) => {
