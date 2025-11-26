@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import api from './api/client'
 import PostForm from './components/PostForm'
-import { useDeletePost } from './hooks/useDeletePost'
+import EditablePost from './components/EditablePost'
 
 function usePosts() {
   return useQuery({
@@ -16,18 +16,6 @@ function usePosts() {
 
 function App() {
   const { data: posts, isLoading, isError } = usePosts()
-  const {
-    mutate: deletePost,
-    isPending: isDeleting,
-    variables: deletingId
-  } = useDeletePost()
-
-  function handleDeleteClick(postId) {
-    const confirmed = window.confirm('¿Seguro que querés eliminar este post?')
-    if (!confirmed) return
-    
-    deletePost(postId)
-  }
 
   return (
     <main style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
@@ -47,42 +35,9 @@ function App() {
       )}
 
       <ul>
-        {posts?.map((post) => {
-          const deletingThis = isDeleting && deletingId === post._id
-
-          return (
-            <li
-              key={post._id}
-              style={{
-                marginBottom: '1.5rem',
-                paddingBottom: '1rem',
-                borderBottom: '1px solid #ddd',
-              }}
-            >
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-              <small>
-                Autor: {post.author || 'Desconocido'} -{' '}
-                {new Date(post.createdAt).toLocaleDateString()}
-              </small>
-
-              <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem' }}>
-                {/* Más adelante acá podemos agregar botón "Editar" */}
-                <button
-                  type="button"
-                  onClick={() => handleDeleteClick(post._id)}
-                  disabled={deletingThis}
-                  style={{
-                    padding: '0.25rem 0.75rem',
-                    cursor: deletingThis ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  {deletingThis ? 'Eliminando...' : 'Eliminar'}
-                </button>
-              </div>
-            </li>
-          )
-        })}
+        {posts?.map((post) => (
+          <EditablePost key={post._id} post={post} />
+        ))}
       </ul>
     </main>
   )
