@@ -4,6 +4,7 @@ import api from "./api/client";
 import PostForm from "./components/PostForm";
 import EditablePost from "./components/EditablePost";
 import PostDetail from "./pages/PostDetail";
+import NewPost from "./pages/NewPost";
 
 function usePosts() {
   return useQuery({
@@ -19,7 +20,9 @@ function Home() {
     <main style={{ maxWidth: "800px", margin: "0 auto", padding: "1rem" }}>
       <h1>Fullstack Blog</h1>
 
-      <PostForm />
+      <Link to="/new" style={{ display: "inline-block", marginBottom: "1rem" }}>
+        Crear nuevo post
+      </Link>
 
       <hr style={{ margin: "2rem 0" }} />
 
@@ -41,6 +44,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/new" element={<NewPost />} />
       <Route path="/posts/:id" element={<PostDetail />} />
     </Routes>
   );
