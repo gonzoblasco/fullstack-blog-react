@@ -32,7 +32,7 @@ function EditablePost({ post }) {
     const deletingThis = isDeleting && deletingId === post._id
 
     return (
-        <li
+        <div
             style={{
                 marginBottom: '1.5rem',
                 paddingBottom: '1rem',
@@ -92,7 +92,7 @@ function EditablePost({ post }) {
                     </div>
                 </>
             )}
-        </li>
+        </div>
     )
 }
 

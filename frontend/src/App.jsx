@@ -1,21 +1,19 @@
-// frontend/src/App.jsx
-import { useQuery } from '@tanstack/react-query'
-import api from './api/client'
+import { Routes, Route, Link } from 'react-router-dom'
 import PostForm from './components/PostForm'
 import EditablePost from './components/EditablePost'
+import { useQuery } from '@tanstack/react-query'
+import api from './api/client'
+import PostDetail from './pages/PostDetail'
 
 function usePosts() {
   return useQuery({
     queryKey: ['posts'],
-    queryFn: async () => {
-      const res = await api.get('/posts')
-      return res.data
-    },
+    queryFn: async () => (await api.get('/posts')).data,
   })
 }
 
-function App() {
-  const { data: posts, isLoading, isError } = usePosts()
+function Home() {
+  const { data: posts } = usePosts()
 
   return (
     <main style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
@@ -27,19 +25,24 @@ function App() {
 
       <h2>Posts publicados</h2>
 
-      {isLoading && <p>Cargando posts...</p>}
-      {isError && <p>Error al cargar posts.</p>}
-
-      {!isLoading && !isError && posts?.length === 0 && (
-        <p>No hay posts todavía. Creá el primero.</p>
-      )}
-
       <ul>
         {posts?.map((post) => (
-          <EditablePost key={post._id} post={post} />
+          <li key={post._id}>
+            <Link to={`/posts/${post._id}`}>{post.title}</Link>
+            <EditablePost post={post} />
+          </li>
         ))}
       </ul>
     </main>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/posts/:id" element={<PostDetail />} />
+    </Routes>
   )
 }
 
